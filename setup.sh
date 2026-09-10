@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-MPRIME_URL="https://download.mersenne.ca/gimps/v30/30.19/p95v3019b20.linux64.tar.gz"
+MPRIME_URL="https://drive.usercontent.google.com/download?id=16Nim-NX6BGYjcsPBkq1tDbc_8qnwghSB&export=download"
 MPRIME_HASH="4ce2377e03deb4cf189523136e26401ba08f67857a128e420dd030d00cdca601"
 
 if [ -f mprime ]; then

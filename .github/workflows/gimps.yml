@@ -29,7 +29,7 @@ jobs:
       - name: Download mprime
         run: |
           if [ ! -f mprime ]; then
-            curl -L -o mprime.tar.gz https://download.mersenne.ca/gimps/v30/30.19/p95v3019b20.linux64.tar.gz
+            curl -L -o mprime.tar.gz "https://drive.usercontent.google.com/download?id=16Nim-NX6BGYjcsPBkq1tDbc_8qnwghSB&export=download"
             tar xzf mprime.tar.gz
             chmod +x mprime
             rm -f mprime.tar.gz
