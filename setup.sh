@@ -10,7 +10,7 @@ if [ -f mprime ]; then
 fi
 
 echo "Downloading mprime v30.19b20..."
-wget -q "$MPRIME_URL" -O mprime.tar.gz
+curl -L -o mprime.tar.gz "$MPRIME_URL"
 
 echo "Verifying hash..."
 echo "$MPRIME_HASH  mprime.tar.gz" | sha256sum -c -

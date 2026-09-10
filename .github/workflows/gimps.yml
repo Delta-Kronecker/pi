@@ -48,10 +48,10 @@ jobs:
       - name: Download mprime
         run: |
           if [ ! -f mprime ]; then
-            wget -q https://download.mersenne.ca/gimps/v30/30.19/p95v3019b20.linux64.tar.gz
-            tar xzf p95v3019b20.linux64.tar.gz
+            curl -L -o mprime.tar.gz https://download.mersenne.ca/gimps/v30/30.19/p95v3019b20.linux64.tar.gz
+            tar xzf mprime.tar.gz
             chmod +x mprime
-            rm -f p95v3019b20.linux64.tar.gz
+            rm -f mprime.tar.gz
           fi
 
       - name: Configure mprime
