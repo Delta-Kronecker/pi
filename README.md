@@ -27,3 +27,4 @@ Go to Actions > GIMPS World Record Hunt > Run workflow
 - GitHub Actions free tier: 2,000 min/month
 - 10 jobs x 6hr = 60hr per cycle (4 cycles/day)
 - Budget: ~720 min/month if run continuously
+
