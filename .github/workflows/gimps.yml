@@ -4,29 +4,11 @@ on:
   schedule:
     - cron: '0 */6 * * *'
   workflow_dispatch:
-    inputs:
-      exponent:
-        description: 'Custom exponent (optional)'
-        required: false
 
 jobs:
   gimps:
     runs-on: ubuntu-latest
     timeout-minutes: 350
-    strategy:
-      matrix:
-        exponent:
-          - 140000001
-          - 140000003
-          - 140000007
-          - 140000013
-          - 140000021
-          - 140000027
-          - 140000037
-          - 140000039
-          - 140000041
-          - 140000057
-      fail-fast: false
 
     steps:
       - uses: actions/checkout@v4
@@ -42,8 +24,7 @@ jobs:
             results.txt
             known.txt
             *.proof
-            *.p*
-          key: mprime-${{ matrix.exponent }}
+          key: gimps-state
 
       - name: Download mprime
         run: |
@@ -56,43 +37,41 @@ jobs:
 
       - name: Configure mprime
         run: |
-          cat > prime.txt << 'EOF'
+          if [ ! -f prime.txt ]; then
+            cat > prime.txt << 'EOF'
           V24OptionsConverted=1
           UsePrimenet=1
           StressTester=0
-          MinTortureFFT=4
-          MaxTortureFFT=4096
           CpuNumThreads=2
           MaxMem=6000
           UseLargePages=0
           V30Compat=1
           User=DeltaKronecker
-          ComputerName=github-action-${{ matrix.exponent }}
+          ComputerName=github-actions
           EOF
+          fi
 
-          cat > local.txt << 'EOF'
+          if [ ! -f local.txt ]; then
+            cat > local.txt << 'EOF'
           Audio=0
           RollerCoaster=0
           EOF
-
-          if [ ! -f worktodo.txt ]; then
-            echo "PRP=${{ matrix.exponent }},1,2,75" > worktodo.txt
           fi
 
       - name: Run mprime
         run: |
           timeout 20900 ./mprime -d || true
-          echo "mprime exited with code $?"
 
       - name: Upload results
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: gimps-exponent-${{ matrix.exponent }}
+          name: gimps-results
           path: |
             results.txt
             known.txt
             quit.txt
+            worktodo.txt
+            prime.txt
             *.proof
-            mprime
           retention-days: 90
