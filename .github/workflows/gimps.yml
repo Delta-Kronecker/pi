@@ -1,0 +1,98 @@
+name: GIMPS World Record Hunt
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+    inputs:
+      exponent:
+        description: 'Custom exponent (optional)'
+        required: false
+
+jobs:
+  gimps:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    strategy:
+      matrix:
+        exponent:
+          - 140000001
+          - 140000003
+          - 140000007
+          - 140000013
+          - 140000021
+          - 140000027
+          - 140000037
+          - 140000039
+          - 140000041
+          - 140000057
+      fail-fast: false
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Restore mprime state
+        uses: actions/cache@v4
+        with:
+          path: |
+            mprime
+            prime.txt
+            local.txt
+            worktodo.txt
+            results.txt
+            known.txt
+            *.proof
+            *.p*
+          key: mprime-${{ matrix.exponent }}
+
+      - name: Download mprime
+        run: |
+          if [ ! -f mprime ]; then
+            wget -q https://www.mersenne.org/download/software/v30/p95v3019b20.linux64.tar.gz
+            tar xzf p95v3019b20.linux64.tar.gz
+            chmod +x mprime
+            rm -f p95v3019b20.linux64.tar.gz
+          fi
+
+      - name: Configure mprime
+        run: |
+          cat > prime.txt << 'EOF'
+          V24OptionsConverted=1
+          UsePrimenet=1
+          StressTester=0
+          MinTortureFFT=4
+          MaxTortureFFT=4096
+          CpuNumThreads=2
+          MaxMem=6000
+          UseLargePages=0
+          V30Compat=1
+          User=DeltaKronecker
+          ComputerName=github-action-${{ matrix.exponent }}
+          EOF
+
+          cat > local.txt << 'EOF'
+          Audio=0
+          RollerCoaster=0
+          EOF
+
+          if [ ! -f worktodo.txt ]; then
+            echo "PRP=${{ matrix.exponent }},1,2,75" > worktodo.txt
+          fi
+
+      - name: Run mprime
+        run: |
+          timeout 20900 ./mprime -d || true
+          echo "mprime exited with code $?"
+
+      - name: Upload results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: gimps-exponent-${{ matrix.exponent }}
+          path: |
+            results.txt
+            known.txt
+            quit.txt
+            *.proof
+            mprime
+          retention-days: 90

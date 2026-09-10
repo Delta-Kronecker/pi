@@ -1,0 +1,10 @@
+V24OptionsConverted=1
+UsePrimenet=1
+StressTester=0
+MinTortureFFT=4
+MaxTortureFFT=4096
+CpuNumThreads=2
+MaxMem=6000
+UseLargePages=0
+V30Compat=1
+User=DeltaKronecker
