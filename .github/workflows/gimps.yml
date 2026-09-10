@@ -48,7 +48,7 @@ jobs:
       - name: Download mprime
         run: |
           if [ ! -f mprime ]; then
-            wget -q https://www.mersenne.org/download/software/v30/p95v3019b20.linux64.tar.gz
+            wget -q https://download.mersenne.ca/gimps/v30/30.19/p95v3019b20.linux64.tar.gz
             tar xzf p95v3019b20.linux64.tar.gz
             chmod +x mprime
             rm -f p95v3019b20.linux64.tar.gz
