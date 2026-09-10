@@ -37,18 +37,16 @@ jobs:
       - name: Configure mprime
         run: |
           if [ ! -f prime.txt ]; then
-            GUID=$(python3 -c "import uuid; print(uuid.uuid4().hex.upper())")
-            cat > prime.txt << EOF
-[PrimeNet]
-V3UserID=DeltaKronecker
-ComputerGuid=${GUID}
-NumWorkers=1
-DaysOfWork=3
-MinTFTBits=68
-MaxTFTBits=999
-WorkPreference=150
-CpuHours=24
-EOF
+            GUID=$(cat /proc/sys/kernel/random/uuid | tr -d '-' | tr 'a-z' 'A-Z')
+            echo "[PrimeNet]" > prime.txt
+            echo "V3UserID=DeltaKronecker" >> prime.txt
+            echo "ComputerGuid=$GUID" >> prime.txt
+            echo "NumWorkers=1" >> prime.txt
+            echo "DaysOfWork=3" >> prime.txt
+            echo "MinTFTBits=68" >> prime.txt
+            echo "MaxTFTBits=999" >> prime.txt
+            echo "WorkPreference=150" >> prime.txt
+            echo "CpuHours=24" >> prime.txt
           fi
 
       - name: Run mprime
