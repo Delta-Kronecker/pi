@@ -18,12 +18,11 @@ jobs:
         with:
           path: |
             mprime
-            prime.txt
             worktodo.txt
             results.txt
             known.txt
             *.proof
-          key: gimps-state
+          key: gimps-state-v2
 
       - name: Download mprime
         run: |
@@ -36,18 +35,17 @@ jobs:
 
       - name: Configure mprime
         run: |
-          if [ ! -f prime.txt ]; then
-            GUID=$(cat /proc/sys/kernel/random/uuid | tr -d '-' | tr 'a-z' 'A-Z')
-            echo "[PrimeNet]" > prime.txt
-            echo "V3UserID=DeltaKronecker" >> prime.txt
-            echo "ComputerGuid=$GUID" >> prime.txt
-            echo "NumWorkers=1" >> prime.txt
-            echo "DaysOfWork=3" >> prime.txt
-            echo "MinTFTBits=68" >> prime.txt
-            echo "MaxTFTBits=999" >> prime.txt
-            echo "WorkPreference=150" >> prime.txt
-            echo "CpuHours=24" >> prime.txt
-          fi
+          echo "[PrimeNet]" > prime.txt
+          echo "V3UserID=DeltaKronecker" >> prime.txt
+          echo "ComputerGuid=34E979D2D31A4F0C9A1B2C3D4E5F6071" >> prime.txt
+          echo "NumWorkers=1" >> prime.txt
+          echo "DaysOfWork=3" >> prime.txt
+          echo "MinTFTBits=68" >> prime.txt
+          echo "MaxTFTBits=999" >> prime.txt
+          echo "WorkPreference=150" >> prime.txt
+          echo "CpuHours=24" >> prime.txt
+          echo "--- prime.txt generated ---"
+          cat prime.txt
 
       - name: Run mprime
         run: |
