@@ -19,7 +19,6 @@ jobs:
           path: |
             mprime
             prime.txt
-            local.txt
             worktodo.txt
             results.txt
             known.txt
@@ -38,20 +37,18 @@ jobs:
       - name: Configure mprime
         run: |
           if [ ! -f prime.txt ]; then
-            printf '%s\n' \
-              "V24OptionsConverted=1" \
-              "UsePrimenet=1" \
-              "StressTester=0" \
-              "CpuNumThreads=2" \
-              "MaxMem=6000" \
-              "UseLargePages=0" \
-              "V30Compat=1" \
-              "User=DeltaKronecker" \
-              "ComputerName=github-actions" \
-              > prime.txt
-          fi
-          if [ ! -f local.txt ]; then
-            printf '%s\n' "Audio=0" "RollerCoaster=0" > local.txt
+            GUID=$(python3 -c "import uuid; print(uuid.uuid4().hex.upper())")
+            cat > prime.txt << EOF
+[PrimeNet]
+V3UserID=DeltaKronecker
+ComputerGuid=${GUID}
+NumWorkers=1
+DaysOfWork=3
+MinTFTBits=68
+MaxTFTBits=999
+WorkPreference=150
+CpuHours=24
+EOF
           fi
 
       - name: Run mprime
