@@ -22,12 +22,12 @@ jobs:
             results.txt
             known.txt
             *.proof
-          key: gimps-state-v2
+          key: gimps-state-v3
 
       - name: Download mprime
         run: |
           if [ ! -f mprime ]; then
-            curl -L -o mprime.tar.gz "https://drive.usercontent.google.com/download?id=16Nim-NX6BGYjcsPBkq1tDbc_8qnwghSB&export=download"
+            curl -sL -o mprime.tar.gz "https://drive.usercontent.google.com/download?id=16Nim-NX6BGYjcsPBkq1tDbc_8qnwghSB&export=download"
             tar xzf mprime.tar.gz
             chmod +x mprime
             rm -f mprime.tar.gz
@@ -35,21 +35,29 @@ jobs:
 
       - name: Configure mprime
         run: |
-          echo "[PrimeNet]" > prime.txt
-          echo "V3UserID=DeltaKronecker" >> prime.txt
-          echo "ComputerGuid=34E979D2D31A4F0C9A1B2C3D4E5F6071" >> prime.txt
-          echo "NumWorkers=1" >> prime.txt
-          echo "DaysOfWork=3" >> prime.txt
-          echo "MinTFTBits=68" >> prime.txt
-          echo "MaxTFTBits=999" >> prime.txt
-          echo "WorkPreference=150" >> prime.txt
-          echo "CpuHours=24" >> prime.txt
-          echo "--- prime.txt generated ---"
+          cat > prime.txt << 'PRIMETXT'
+V24OptionsConverted=1
+UsePrimenet=1
+StressTester=0
+CpuNumThreads=2
+MaxMem=6000
+UseLargePages=0
+V30Compat=1
+V3UserID=DeltaKronecker
+ComputerGuid=34E979D2D31A4F0C9A1B2C3D4E5F6071
+PRIMETXT
+          cat > local.txt << 'LOCALTXT'
+Audio=0
+RollerCoaster=0
+LOCALTXT
+          echo "=== prime.txt ==="
           cat prime.txt
+          echo "=== local.txt ==="
+          cat local.txt
 
       - name: Run mprime
         run: |
-          timeout 20900 ./mprime -d || true
+          timeout 20900 ./mprime -d < /dev/null || true
 
       - name: Upload results
         uses: actions/upload-artifact@v4
@@ -62,5 +70,6 @@ jobs:
             quit.txt
             worktodo.txt
             prime.txt
+            local.txt
             *.proof
           retention-days: 90
