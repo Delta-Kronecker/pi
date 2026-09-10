@@ -38,24 +38,20 @@ jobs:
       - name: Configure mprime
         run: |
           if [ ! -f prime.txt ]; then
-            cat > prime.txt << 'EOF'
-          V24OptionsConverted=1
-          UsePrimenet=1
-          StressTester=0
-          CpuNumThreads=2
-          MaxMem=6000
-          UseLargePages=0
-          V30Compat=1
-          User=DeltaKronecker
-          ComputerName=github-actions
-          EOF
+            printf '%s\n' \
+              "V24OptionsConverted=1" \
+              "UsePrimenet=1" \
+              "StressTester=0" \
+              "CpuNumThreads=2" \
+              "MaxMem=6000" \
+              "UseLargePages=0" \
+              "V30Compat=1" \
+              "User=DeltaKronecker" \
+              "ComputerName=github-actions" \
+              > prime.txt
           fi
-
           if [ ! -f local.txt ]; then
-            cat > local.txt << 'EOF'
-          Audio=0
-          RollerCoaster=0
-          EOF
+            printf '%s\n' "Audio=0" "RollerCoaster=0" > local.txt
           fi
 
       - name: Run mprime
